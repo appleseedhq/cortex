@@ -39,7 +39,7 @@
 
 #include "boost/thread/mutex.hpp"
 
-#include "foundation/utility/autoreleaseptr.h"
+#include "foundation/memory/autoreleaseptr.h"
 #include "renderer/api/rendering.h"
 
 namespace IECoreAppleseed

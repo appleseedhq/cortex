@@ -44,7 +44,7 @@
 #include "boost/thread/mutex.hpp"
 
 #include "foundation/image/image.h"
-#include "foundation/utility/autoreleaseptr.h"
+#include "foundation/memory/autoreleaseptr.h"
 #include "renderer/api/aov.h"
 #include "renderer/api/frame.h"
 #include "renderer/api/log.h"
@@ -286,9 +286,19 @@ class DisplayTileCallback : public ProgressTileCallback
 			delete this;
 		}
 
-		void on_tile_begin(const asr::Frame *frame, const size_t tileX, const size_t tileY) override
+		void on_tile_begin(
+			const asr::Frame *frame,
+			const size_t tileX,
+			const size_t tileY,
+			const size_t thread_index,
+			const size_t thread_count) override
 		{
-			ProgressTileCallback::on_tile_begin( frame, tileX, tileY );
+			ProgressTileCallback::on_tile_begin(
+				frame,
+				tileX,
+				tileY,
+				thread_index,
+				thread_count);
 
 			const asf::CanvasProperties &props = frame->image().properties();
 			const size_t x = tileX * props.m_tile_width;
@@ -311,13 +321,18 @@ class DisplayTileCallback : public ProgressTileCallback
 			}
 		}
 
-		void on_progressive_frame_update( const asr::Frame* frame ) override
+		void on_progressive_frame_update(
+			const asr::Frame &frame,
+			const double /* time */,
+			const std::uint64_t /* samples */,
+			const double /* samplesPerPixel */,
+			const std::uint64_t /* samplesPerSecond */) override
 		{
-			const asf::CanvasProperties &frame_props = frame->image().properties();
+			const asf::CanvasProperties &frame_props = frame.image().properties();
 
 			for( const auto &layer : *m_layers )
 			{
-				layer->initDisplay( frame );
+				layer->initDisplay( &frame );
 			}
 
 			for( size_t ty = 0; ty < frame_props.m_tile_count_y; ++ty )

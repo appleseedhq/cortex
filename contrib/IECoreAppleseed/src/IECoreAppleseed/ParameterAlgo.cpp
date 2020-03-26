@@ -204,28 +204,28 @@ void setParam( const string &name, const Data *value, asr::ParamArray &params )
 		case IntDataTypeId :
 		{
 			int x = static_cast<const IntData*>( value )->readable();
-			params.insert( name, x );
+			params.insert( name.c_str(), x );
 		}
 		break;
 
 		case FloatDataTypeId :
 		{
 			float x = static_cast<const FloatData*>( value )->readable();
-			params.insert( name, x );
+			params.insert( name.c_str(), x );
 		}
 		break;
 
 		case StringDataTypeId :
 		{
 			const string &x = static_cast<const StringData*>( value )->readable();
-			params.insert( name, x.c_str() );
+			params.insert( name.c_str(), x.c_str() );
 		}
 		break;
 
 		case BoolDataTypeId :
 		{
 			bool x = static_cast<const BoolData*>( value )->readable();
-			params.insert( name, x );
+			params.insert( name.c_str(), x );
 		}
 		break;
 
